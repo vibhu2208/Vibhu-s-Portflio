@@ -1,0 +1,9 @@
+.techstack h2{
+    font-size: 5vh;
+    font-weight: 200;
+}
+.techstack span{
+    font-size: 5vh;
+    color: var(--accentColor);
+    font-weight: 500;
+}
