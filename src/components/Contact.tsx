@@ -1,4 +1,4 @@
-
+import { MdArrowOutward } from "react-icons/md";
 import "./styles/Contact.css";
 
 const Contact = () => {
