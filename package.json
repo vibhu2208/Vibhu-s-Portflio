@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite --host",
     "build": "vite build",
-    "vercel-build": "node ./node_modules/vite/bin/vite.js build",
+    "vercel-build": "NODE_ENV=production npm install && npm run build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
