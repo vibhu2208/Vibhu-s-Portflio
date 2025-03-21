@@ -1,8 +1,7 @@
 import "./styles/Work.css";
-import WorkImage from "./WorkImage";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -22,8 +21,8 @@ const workData: WorkItem[] = [
     title: "TechThrive System",
     category: "Web Development",
     tools: "JavaScript, TypeScript, React, Next.js",
-    image: "/public/images/techthrive.png",
-    link: "https://techthrivesystem.com/" // Add your project link here
+    image: "/images/techthrive.png",
+    link: "https://techthrivesystem.com/"
   },
   {
     id: 2,
@@ -31,7 +30,7 @@ const workData: WorkItem[] = [
     category: "Web Development",
     tools: "HTML, CSS, JavaScript, tailwindcss",
     image: "/images/it-solutions.png",
-    link: "https://it-solutions-chi.vercel.app/" // Add your project link here
+    link: "https://it-solutions-chi.vercel.app/"
   },
   {
     id: 3,
@@ -39,55 +38,67 @@ const workData: WorkItem[] = [
     category: "Creative Design",
     tools: "HTML, CSS, JavaScript, GSAP",
     image: "/images/wavyhomepage.png",
-    link: "https://wavyhomepage.vercel.app/" // Add your project link here
+    link: "https://wavyhomepage.vercel.app/"
   },
 ];
 
 const Work = () => {
+  const workSectionRef = useRef<HTMLElement>(null);
+
   useEffect(() => {
-    let translateX: number = 0;
+    if (!workSectionRef.current) return;
 
-    function setTranslateX() {
-      const box = document.getElementsByClassName("work-box");
-      const rectLeft = document
-        .querySelector(".work-container")!
-        .getBoundingClientRect().left;
-      const rect = box[0].getBoundingClientRect();
-      const parentWidth = box[0].parentElement!.getBoundingClientRect().width;
-      let padding: number = parseInt(window.getComputedStyle(box[0]).padding) / 2;
-      translateX = rect.width * box.length - (rectLeft + parentWidth) + padding;
-    }
+    // Ensure section is visible immediately
+    workSectionRef.current.style.opacity = "1";
+    workSectionRef.current.style.visibility = "visible";
+    workSectionRef.current.style.display = "flex";
 
-    setTranslateX();
-
-    let timeline = gsap.timeline({
+    // Initial animation
+    gsap.from(".work-box", {
+      opacity: 0,
+      y: 50,
+      duration: 1,
+      stagger: 0.2,
+      ease: "power3.out",
       scrollTrigger: {
-        trigger: ".work-section",
-        start: "top top",
-        end: "bottom top",
-        scrub: true,
-        pin: true,
-        pinType: !ScrollTrigger.isTouch ? "transform" : "fixed",
-        id: "work",
-      },
+        trigger: workSectionRef.current,
+        start: "top 80%",
+        toggleActions: "play none none reverse"
+      }
     });
 
-    timeline.to(".work-flex", {
-      x: -translateX,
-      duration: 40,
-      delay: 0.2,
-    });
+    // Force a reflow to ensure visibility
+    workSectionRef.current.offsetHeight;
   }, []);
 
   return (
-    <div className="work-section" id="work">
+    <section 
+      className="work-section" 
+      id="work" 
+      ref={workSectionRef}
+      style={{
+        opacity: 1,
+        visibility: 'visible',
+        display: 'flex'
+      }}
+    >
       <div className="work-container section-container">
         <h2>
           My <span>Work</span>
         </h2>
         <div className="work-flex">
           {workData.map((work) => (
-            <a href={work.link} target="_blank" rel="noopener noreferrer" className="work-box" key={work.id}>
+            <a 
+              href={work.link} 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="work-box" 
+              key={work.id}
+              style={{
+                opacity: 1,
+                visibility: 'visible'
+              }}
+            >
               <div className="work-info">
                 <div className="work-title">
                   <h3>{work.id.toString().padStart(2, '0')}</h3>
@@ -99,12 +110,29 @@ const Work = () => {
                 <h4>Tools and features</h4>
                 <p>{work.tools}</p>
               </div>
-              <WorkImage image={work.image} alt={work.title} />
+              <div className="work-image">
+                <img 
+                  src={work.image} 
+                  alt={work.title} 
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.src = '/images/placeholder.webp';
+                  }}
+                  style={{ 
+                    width: '100%', 
+                    height: 'auto',
+                    display: 'block',
+                    backgroundColor: '#1a1a1a',
+                    opacity: 1,
+                    visibility: 'visible'
+                  }}
+                />
+              </div>
             </a>
           ))}
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 
