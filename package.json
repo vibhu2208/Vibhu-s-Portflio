@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host",
-    "build": "vite build",
-    "vercel-build": "NODE_ENV=production npm install && npm run build",
+    "build": "npx vite build",
+    "vercel-build": "npm install && npx vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
